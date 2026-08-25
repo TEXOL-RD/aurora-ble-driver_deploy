@@ -10,8 +10,9 @@
 ```text
 aurora-ble-driver_deploy/
 ├── config/
-│   └── GatewayIP.txt       # 網關 IP 設定檔 (驅動程式啟動必要依賴)
+│   └── GatewayIP.txt       # 網關 IP 設定檔 (驅動程式啟動依賴)
 ├── docker-compose.yml       # Docker 服務編排設定
+├── install-docker.sh        # Docker & Docker Compose 環境安裝腳本
 ├── deploy-ble.sh            # 一鍵自動化部署與路徑配置腳本
 └── README.md                # 專案說明文件
 ```
@@ -44,7 +45,16 @@ cd aurora-ble-driver_deploy
 nano config/GatewayIP.txt
 ```
 
-3. 一鍵啟動部署 (Run Deployment Script)
+3. 安裝 Docker 環境 (若伺服器尚未安裝 Docker)
+```Bash
+chmod +x install-docker.sh
+./install-docker.sh
+```
+
+> [!IMPORTANT]
+> 在進行下一步之前，請於 Docker 安裝後**重新啟動電腦**。
+
+4. 一鍵啟動部署 (Run Deployment Script)
 賦予腳本執行權限並啟動：
 
 ```Bash
