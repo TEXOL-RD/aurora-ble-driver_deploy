@@ -1,0 +1,52 @@
+version: '3.8'
+
+x-logging: &default-logging
+  driver: "json-file"
+  options:
+    max-size: "10mb"
+    max-file: "5"
+
+networks:
+  edgex-network:
+    driver: bridge
+
+volumes:
+  texol-mosquitto-log:
+  texol-mosquitto-data:
+
+services:
+  # MQTT Broker (BLE 驅動通訊核心)
+  texol-broker:
+    image: eclipse-mosquitto:2.0.15
+    container_name: texol-broker
+    hostname: texol-broker
+    command: "/usr/sbin/mosquitto -c /mosquitto-no-auth.conf"
+    networks:
+      - edgex-network
+    ports:
+      - "1883:1883"  # 核心：提供 BLE Driver 內部連線
+      - "1884:1883"
+      - "1885:1883"
+      - "1886:1883"
+    restart: always
+    read_only: true
+    user: 2002:2001
+    volumes:
+      - texol-mosquitto-log:/mosquitto/log
+      - texol-mosquitto-data:/mosquitto/data
+    logging: *default-logging
+
+  # TEXOL BLE Driver 驅動服務
+  texol-ble-driver:
+    image: texolaurora/texol-ble-driver:0.5
+    container_name: texol-ble-driver
+    hostname: texol-ble-driver
+    networks:
+      - edgex-network
+    restart: always
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /usr/share/texol:/texol
+    depends_on:
+      - texol-broker
+    logging: *default-logging
