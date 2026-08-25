@@ -14,23 +14,23 @@ aurora-ble-driver_deploy/
 ├── docker-compose.yml       # Docker 服務編排設定
 ├── deploy-ble.sh            # 一鍵自動化部署與路徑配置腳本
 └── README.md                # 專案說明文件
+```
 
-⚙️ 服務說明 (Architecture Summary)
-texol-broker (eclipse-mosquitto:2.0.15)
+## ⚙️ 服務說明 (Architecture Summary)
+1. texol-broker (eclipse-mosquitto:2.0.15)
+    - MQTT Broker 服務。
+      
+    - 提供內部 **1883** 埠供 **texol-ble-driver** 連線，並映射 **1883-1886** 埠至宿主機。
 
-MQTT Broker 服務。
+2. texol-ble-driver (texolaurora/texol-ble-driver:0.5)
 
-提供內部 1883 埠供 texol-ble-driver 連線，並映射 1883-1886 埠至宿主機。
+    - 藍牙感測器驅動程式本體。
 
-texol-ble-driver (texolaurora/texol-ble-driver:0.5)
+    - 解析 BLE 原始封包，轉換為單軸 (211HM1-B1) 或三軸 (213MM1-B1) 振幅、轉速、時域/頻域特徵與故障預測指標。
 
-藍牙感測器驅動程式本體。
+    - 依賴要求：啟動時會讀取 `/usr/share/texol/GatewayIP.txt`。
 
-解析 BLE 原始封包，轉換為單軸 (211HM1-B1) 或三軸 (213MM1-B1) 振幅、轉速、時域/頻域特徵與故障預測指標。
-
-依賴要求：啟動時會讀取 /usr/share/texol/GatewayIP.txt。
-
-🚀 快速開始 (Quick Start)
+## 🚀 快速開始 (Quick Start)
 1. 克隆 GitHub 專案 (Clone Repository)
 ```Bash
 git clone [https://github.com/](https://github.com/)<your-username>/aurora-ble-driver_deploy.git
@@ -38,7 +38,7 @@ cd aurora-ble-driver_deploy
 ```
 
 2. 設定 Gateway IP (Optional)
-預設 Gateway IP 為 192.168.10.1。若需要修改，請編輯 config/GatewayIP.txt：
+預設 Gateway IP 為 **192.168.10.1**。若需要修改，請編輯 `config/GatewayIP.txt`：
 
 ```Bash
 nano config/GatewayIP.txt
@@ -52,32 +52,32 @@ chmod +x deploy-ble.sh
 ./deploy-ble.sh
 ```
 
-🛠️ 常用管理指令 (Operation Commands)
-查看容器狀態：
+## 🛠️ 常用管理指令 (Operation Commands)
+  - 查看容器狀態：
+  
+  ```Bash
+  docker compose ps
+  ```
+  
+  - 查看 BLE Driver 運作日誌：
+  
+  ```Bash
+  docker logs -f texol-ble-driver
+  ```
+  
+  - 停止服務：
+  
+  ```Bash
+  docker compose down
+  ```
+  
+  - 重啟 BLE Driver 服務：
+  
+  ```Bash
+  docker compose restart texol-ble-driver
+  ```
 
-```Bash
-docker compose ps
-```
+## 📡 MQTT Topic 說明
+- 感測器數據發布：**/TEXOL/{ModuleName}/{SensorID}**
 
-查看 BLE Driver 運作日誌：
-
-```Bash
-docker logs -f texol-ble-driver
-```
-
-停止服務：
-
-```Bash
-docker compose down
-```
-
-重啟 BLE Driver 服務：
-
-```Bash
-docker compose restart texol-ble-driver
-```
-
-📡 MQTT Topic 說明
-感測器數據發布：/TEXOL/{ModuleName}/{SensorID}
-
-感測器心跳訊號：/TEXOL/{ModuleName}/{SensorID}/HEARTBEAT
+- 感測器心跳訊號：**/TEXOL/{ModuleName}/{SensorID}/HEARTBEAT**
