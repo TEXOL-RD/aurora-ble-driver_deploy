@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 
 #### Versions
@@ -12,16 +12,16 @@ legal_arch=("amd64" "x86_64" "aarch64")
 distro_id=$(cat /etc/os-release | grep -i '^ID=' | awk -F'=' '{print tolower($2)}')
 distro_ver=$(cat /etc/os-release | grep -i '^VERSION_ID=' | awk -F'=' '{print tolower($2)}' | sed 's/"//g')
 
-# Check if cpu_arch is in legal_arch
-if [[ ! " ${legal_arch[@]} " =~ " ${cpu_arch} " ]]; then
+# Check if cpu_arch is in legal_arch (POSIX-compliant version)
+if ! echo "${legal_arch[*]}" | grep -qw "$cpu_arch"; then
   echo "Architecture not supported."
   exit 1
 fi
 
 # Set arch based on cpu_arch
-if [[ $cpu_arch == "amd64" \vert{}\vert{} $cpu_arch == "x86_64" ]]; then
+if [ "$cpu_arch" = "amd64" ] || [ "$cpu_arch" = "x86_64" ]; then
   arch="amd64"
-elif [[ $cpu_arch == "aarch64" ]]; then
+elif [ "$cpu_arch" = "aarch64" ]; then
   arch="arm64"
 else
   echo "Architecture not supported."
