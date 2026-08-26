@@ -26,6 +26,5 @@ docker compose up -d
 
 echo ""
 echo "=========================================="
-echo "  Deployment Complete! Showing Logs...    "
+echo "  Deployment Complete!                    "
 echo "=========================================="
-docker logs -f texol-ble-driver

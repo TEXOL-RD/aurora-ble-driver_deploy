@@ -103,6 +103,9 @@ chmod +x deploy-ble.sh
 2. 執行更新腳本：
 
 ```Bash
+# 賦予該檔案執行權限
+chmod +x update.sh
+# 執行
 ./update.sh
 ```   
 
