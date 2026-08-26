@@ -32,21 +32,14 @@ aurora-ble-driver_deploy/
     - 依賴要求：啟動時會讀取 `/usr/share/texol/GatewayIP.txt`。
 
 ## 🚀 快速開始 (Quick Start)
-1. 克隆 GitHub 專案 (Clone Repository)
-```Bash
-git clone [https://github.com/](https://github.com/)<your-username>/aurora-ble-driver_deploy.git
-cd aurora-ble-driver_deploy
-```
+1. copy GitHub 專案 (Clone Repository)
 
 2. 設定 Gateway IP (Optional)
-預設 Gateway IP 為 **192.168.10.1**。若需要修改，請編輯 `config/GatewayIP.txt`：
-
-```Bash
-nano config/GatewayIP.txt
-```
+預設 Gateway IP 為 **192.168.10.1**。若需要修改，請編輯 `config/GatewayIP.txt`
 
 3. 安裝 Docker 環境 (若伺服器尚未安裝 Docker)
 ```Bash
+cd aurora-ble-driver_deploy
 chmod +x install-docker.sh
 ./install-docker.sh
 ```
