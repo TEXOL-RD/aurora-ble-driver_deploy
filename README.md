@@ -91,3 +91,19 @@ chmod +x deploy-ble.sh
 - 感測器數據發布：**/TEXOL/{ModuleName}/{SensorID}**
 
 - 感測器心跳訊號：**/TEXOL/{ModuleName}/{SensorID}/HEARTBEAT**
+
+
+## 🔄 更新流程 (Update Process)
+
+當需要更新 `texol-ble-driver` 或 `texol-broker` 的版本時，請依以下步驟操作：
+
+1. **修改版本號碼**：
+   編輯 `docker-compose.yml`，將 `image` 欄位修改為新的版本 Tag：
+
+2. 執行更新腳本：
+
+```Bash
+./update.sh
+```   
+
+提示：update.sh 會自動拉取新版 Image、重新構建容器，並同步載入新的 IP 設定，不會影響已掛載的數據與設定檔。
