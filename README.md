@@ -85,6 +85,8 @@ chmod +x deploy-ble.sh
 
 - 感測器心跳訊號：**/TEXOL/{ModuleName}/{SensorID}/HEARTBEAT**
 
+- 所有俺測器 : **/TEXOL/#**
+
 
 ## 🔄 更新流程 (Update Process)
 
@@ -103,3 +105,35 @@ chmod +x update.sh
 ```   
 
 提示：update.sh 會自動拉取新版 Image、重新構建容器，並同步載入新的 IP 設定，不會影響已掛載的數據與設定檔。
+
+## 🔧 Changing Gateway IP Address (修改 Gateway IP)
+
+If you need to update the Gateway IP address used by the BLE Driver, follow these steps:
+
+1. **Edit the configuration file**:
+   Update the IP address in `config/GatewayIP.txt`:
+   
+2. Apply the changes:
+Run the update script to sync the new IP file to `/usr/share/texol/GatewayIP.txt and restart the service`:  
+```Bash
+./update.sh
+```
+
+3. Verify the change:
+Check the driver log to confirm that the new Gateway IP has been loaded:  
+```Bash
+docker logs texol-ble-driver | grep "Gateway IP"
+```
+
+## 📡 Monitoring MQTT Topics (透過 Docker 監聽 MQTT 訊息)
+
+You can monitor incoming raw BLE data and decoded sensor payload directly inside the `texol-broker` container without installing extra tools.
+
+### 1. Monitor Decoded Sensor Data & Heartbeat
+To view processed sensor feature values (RPM, OA, FFT features, etc.) and heartbeat signals published by the BLE Driver[cite: 9]:
+
+```bash
+docker exec -it texol-broker mosquitto_sub -t "/TEXOL/#" -v
+### 2. Monitor Raw Sensor DataTo check incoming raw data sent from BLE gateways or sensors:  Bashdocker exec -it texol-broker mosquitto_sub -t "/SENSOR/#" -v
+### 3. Monitor All TrafficTo inspect every message passing through the MQTT broker:Bashdocker exec -it texol-broker mosquitto_sub -t "#" -v
+Note:The -v (verbose) flag prints both the Topic name and the Payload content.Press Ctrl + C to exit the monitoring window.
