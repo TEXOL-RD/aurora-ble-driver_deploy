@@ -19,8 +19,7 @@ aurora-ble-driver_deploy/
 
 ## ⚙️ 服務說明 (Architecture Summary)
 1. texol-broker (eclipse-mosquitto:2.0.15)
-    - MQTT Broker 服務。
-      
+    - MQTT Broker 服務。      
     - 提供內部 **1883** 埠供 **texol-ble-driver** 連線，並映射 **1883-1886** 埠至宿主機。
 
 2. texol-ble-driver (texolaurora/texol-ble-driver:0.5)
@@ -38,11 +37,11 @@ aurora-ble-driver_deploy/
 預設 Gateway IP 為 **192.168.10.1**。若需要修改，請編輯 `config/GatewayIP.txt`
 
 3. 安裝 Docker 環境 (若伺服器尚未安裝 Docker)
-```Bash
-cd aurora-ble-driver_deploy
-chmod +x install-docker.sh
-./install-docker.sh
-```
+    ```Bash
+    cd aurora-ble-driver_deploy
+    chmod +x install-docker.sh
+    ./install-docker.sh
+    ```
 
 > [!IMPORTANT]
 > 在進行下一步之前，請於 Docker 安裝後**重新啟動電腦**。
@@ -50,10 +49,10 @@ chmod +x install-docker.sh
 4. 一鍵啟動部署 (Run Deployment Script)
 賦予腳本執行權限並啟動：
 
-```Bash
-chmod +x deploy-ble.sh
-./deploy-ble.sh
-```
+    ```Bash
+    chmod +x deploy-ble.sh
+    ./deploy-ble.sh
+    ```
 
 ## 🛠️ 常用管理指令 (Operation Commands)
   - 查看容器狀態：
@@ -130,10 +129,22 @@ docker logs texol-ble-driver | grep "Gateway IP"
 You can monitor incoming raw BLE data and decoded sensor payload directly inside the `texol-broker` container without installing extra tools.
 
 ### 1. Monitor Decoded Sensor Data & Heartbeat
-To view processed sensor feature values (RPM, OA, FFT features, etc.) and heartbeat signals published by the BLE Driver[cite: 9]:
+To view processed sensor feature values (RPM, OA, FFT features, etc.) and heartbeat signals published by the BLE Driver:
 
 ```bash
 docker exec -it texol-broker mosquitto_sub -t "/TEXOL/#" -v
-### 2. Monitor Raw Sensor DataTo check incoming raw data sent from BLE gateways or sensors:  Bashdocker exec -it texol-broker mosquitto_sub -t "/SENSOR/#" -v
-### 3. Monitor All TrafficTo inspect every message passing through the MQTT broker:Bashdocker exec -it texol-broker mosquitto_sub -t "#" -v
-Note:The -v (verbose) flag prints both the Topic name and the Payload content.Press Ctrl + C to exit the monitoring window.
+```
+
+### 2. Monitor Raw Sensor DataTo check incoming raw data sent from BLE gateways or sensors:  
+```Bash
+docker exec -it texol-broker mosquitto_sub -t "/SENSOR/#" -v
+```
+
+### 3. Monitor All TrafficTo inspect every message passing through the MQTT broker:
+```Bash
+docker exec -it texol-broker mosquitto_sub -t "#" -v
+```
+
+Note:
+- The -v (verbose) flag prints both the Topic name and the Payload content.
+- Press Ctrl + C to exit the monitoring window.
